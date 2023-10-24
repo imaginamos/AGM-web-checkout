@@ -3,17 +3,15 @@ import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
 
 type Inputs = {
-  merchantId: string;
-  accountId: string;
   description: string;
   referenceCode: string;
   amount: string;
   tax: string;
   taxReturnBase: string;
   currency: string;
-  signature: string;
   test: string;
   buyerEmail: string;
+  buyerFullName: string;
   responseUrl: string;
   confirmationUrl: string;
 };
@@ -28,6 +26,7 @@ export default function FormOrder() {
     taxReturnBase,
     currency,
     buyerEmail,
+    buyerFullName,
     responseUrl,
     confirmationUrl,
   } = query as Inputs;
@@ -42,19 +41,34 @@ export default function FormOrder() {
   const createSignature = (
     referenceS: string,
     priceS: string,
-    currencyS: string
+    currencyS: string,
+    paymentMethodsS: string[]
   ) => {
     return md5(
-      `${process.env.NEXT_PUBLIC_API_KEY_PAYU}~${process.env.NEXT_PUBLIC_MERCHAND_ID_PAYU}~${referenceS}~${priceS}~${currencyS}`
+      `${process.env.NEXT_PUBLIC_API_KEY_PAYU}~${
+        process.env.NEXT_PUBLIC_MERCHAND_ID_PAYU
+      }~${referenceS}~${priceS}~${currencyS}~${paymentMethodsS?.toString()}`
     );
   };
+
+  const paymentMethods = [
+    "VISA",
+    "VISA_DEBIT",
+    "MASTERCARD",
+    "MASTERCARD_DEBIT",
+    "AMEX",
+    "DINERS",
+    "CODENSA",
+    "PSE",
+    "BANK_REFERENCED",
+  ];
 
   return (
     <form
       name="form"
       id="formPago"
       method="post"
-      action="https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu" // Send post request with the FormData
+      action="https://checkout.payulatam.com/ppp-web-gateway-payu/" // Send post request with the FormData
       ref={IRefForm}
     >
       <input
@@ -76,12 +90,18 @@ export default function FormOrder() {
       <input
         name="signature"
         type="hidden"
-        value={createSignature(referenceCode, amount, currency)}
+        value={createSignature(referenceCode, amount, currency, paymentMethods)}
       />
-      <input name="test" type="hidden" value="0"></input>
+      <input name="test" type="hidden" value="1"></input>
       <input name="buyerEmail" type="hidden" value={buyerEmail} />
+      <input name="buyerFullName" type="hidden" value={buyerFullName} />
       <input name="responseUrl" type="hidden" value={responseUrl} />
       <input name="confirmationUrl" type="hidden" value={confirmationUrl} />
+      <input
+        name="paymentMethods"
+        type="hidden"
+        value={paymentMethods?.toString()}
+      />
       <input name="Submit" type="submit" value="Enviar" />
     </form>
   );
