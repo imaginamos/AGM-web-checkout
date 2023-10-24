@@ -1,0 +1,1 @@
+  merchantId=508029&accountId=512321&description=Test PAYU&referenceCode=TestPayU&amount=20000&tax=3193&taxReturnBase=16806&currency=COP&signature=7ee7cf808ce6a39b17481c54f2c57acc&test=0&buyerEmail=test@test.com&responseUrl=http://www.test.com/response&confirmationUrl=http://www.test.com/confirmation
