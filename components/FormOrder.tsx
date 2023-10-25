@@ -34,7 +34,7 @@ export default function FormOrder() {
   useEffect(() => {
     if (!query) return;
     if (IRefForm.current) {
-      // IRefForm.current.submit();
+      IRefForm.current.submit();
     }
   }, [query]);
 
@@ -102,7 +102,7 @@ export default function FormOrder() {
         type="hidden"
         value={paymentMethods?.toString()}
       />
-      <input name="Submit" type="submit" value="Enviar" />
+      {/* <input name="Submit" type="submit" value="Enviar" /> */}
     </form>
   );
 }
